@@ -54,6 +54,12 @@ resource "aws_instance" "web-terraform-instance" {
     aws_security_group.web-terraform-sg.id
   ]
 
+  user_data = <<-EOF
+    #!/bin/bash
+    echo "<h1>Hello, World from $(hostname -f)<h1>" > index.html
+    python3 -m http.server 80 &
+    EOF
+
   root_block_device {
     delete_on_termination = true
     volume_type = "gp2"
