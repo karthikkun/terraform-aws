@@ -1,4 +1,14 @@
+
 terraform {
+
+  backend "s3" {
+    bucket         = "remote-tf-state"
+    key            = "remote/backend/tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-state-locks"
+    encrypt        = true
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
