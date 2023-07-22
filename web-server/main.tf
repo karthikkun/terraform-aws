@@ -8,13 +8,13 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
   profile = "default"
 }
 
 resource "aws_instance" "web-terraform-instance-1" {
-  ami           = "ami-011899242bb902164" # Ubuntu 20.04 LTS // us-east-1
-  instance_type = "t2.micro"
+  ami           = var.ami
+  instance_type = var.instance_type
   associate_public_ip_address = true
   security_groups = [aws_security_group.web-terraform-sg.name]
   user_data = <<-EOF
@@ -29,7 +29,7 @@ resource "aws_instance" "web-terraform-instance-1" {
   }
 
   tags = {
-    Name ="web-terraform-instance-1"
+    Name = var.instance_tag
     Environment = "SANDBOX"
     OS = "UBUNTU"
     Managed = "IAC"
@@ -39,8 +39,8 @@ resource "aws_instance" "web-terraform-instance-1" {
 }
 
 resource "aws_instance" "web-terraform-instance-2" {
-  ami           = "ami-011899242bb902164" # Ubuntu 20.04 LTS // us-east-1
-  instance_type = "t2.micro"
+  ami           = var.ami
+  instance_type = var.instance_type
   associate_public_ip_address = true
   security_groups = [aws_security_group.web-terraform-sg.name]
   user_data = <<-EOF
@@ -55,7 +55,7 @@ resource "aws_instance" "web-terraform-instance-2" {
   }
 
   tags = {
-    Name ="web-terraform-instance-2"
+    Name = var.instance_tag
     Environment = "SANDBOX"
     OS = "UBUNTU"
     Managed = "IAC"
@@ -180,8 +180,3 @@ resource "aws_lb" "web-terraform-lb" {
   subnets               = data.aws_subnets.default-subnet.ids
   security_groups       = [aws_security_group.web-terraform-lb-sg.id] 
 }
-
-output "lb-dns-name" {
-  value = aws_lb.web-terraform-lb.dns_name
-}
-
